@@ -33,13 +33,10 @@ public class Payment {
 
     @Override
     public String toString() {
-        if(BigDecimal.ZERO != amount){
-            String str = currency + " " + amount;
-            if(null != usdAmount){
-                str += " (USD " + usdAmount + ")";
-            }
-            return str;
+        String str = currency + " " + amount;
+        if(null != usdAmount){
+            str += " (USD " + usdAmount + ")";
         }
-        return null;
+        return str;
     }
 }
