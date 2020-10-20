@@ -27,7 +27,8 @@ public class PaymentMain {
         CollectDataThread collectDataThread = new CollectDataThread();
         collectDataThread.setPaymentService(paymentService);
         FutureTask<Boolean> inspector = new FutureTask<Boolean>(collectDataThread);
-        new Thread(inspector).start();
+        Thread collectThread = new Thread(inspector);
+        collectThread.start();
 
         Timer timer = new Timer();
         try{
@@ -40,10 +41,11 @@ public class PaymentMain {
                     paymentService.outputData();
                     System.out.println("--------- Please enter the payments : --------------");
                 }
-            }, nowTime.getTime(), 60 * 1000);
+            }, nowTime.getTime(), 30 * 1000);
             // If the input data is incorrect, the output is terminated
             if(!inspector.get()){
                 timer.cancel();
+                //collectThread.interrupt();
                 System.out.println("==========THE END========");
             }
         }catch (Exception e){

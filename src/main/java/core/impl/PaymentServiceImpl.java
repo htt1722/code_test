@@ -17,16 +17,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PaymentServiceImpl implements PaymentService {
     Map<String, BigDecimal> dataMap = new ConcurrentHashMap<>();
-    Map<String, BigDecimal> rateMap = new HashMap<>();
+    private Map<String, BigDecimal> rateMap = new HashMap<>();
 
     public void init() {
         Scanner sc = new Scanner(System.in);
         System.out.println("--------- Please enter the initialization file name: ------------------ ");
         String fileName = sc.nextLine();  //读取字符串型输入
-        String filePath = PaymentServiceImpl.class.getResource("/").getPath() + fileName;
+        String filePath = this.getClass().getResource("/").getPath() + fileName;
         File file = new File(filePath);
         if(!file.exists()){
-            file = new File(PaymentServiceImpl.class.getResource("/").getPath() + "payment_list.txt");
+            file = new File(this.getClass().getResource("/").getPath() + "payment_list.txt");
             System.out.println("INFO: The file name entered does not exist. The default file will be used!");
         }
         InputStreamReader isr = null;
