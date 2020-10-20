@@ -13,32 +13,41 @@ public class PaymentMain {
         Scanner scanner = new Scanner(System.in);
         String nextLine = scanner.nextLine();
         PaymentService paymentService = new PaymentServiceImpl();
+        // The user can set the exchange rate by entering "Y"
         if("Y".equals(nextLine)){
             // Gets the set exchange rate
             Map<String, BigDecimal> rateMap = getRateMap(scanner);
             paymentService.setRateValue(rateMap);
         }
-        //paymentService.init();
+        // Reading information from a file
+        // The user can input the file name. If the file does not exist, it will be replaced by the default file
+        paymentService.init();
+
+        // Start the thread to collect data
         CollectDataThread collectDataThread = new CollectDataThread();
         collectDataThread.setPaymentService(paymentService);
         FutureTask<Boolean> inspector = new FutureTask<Boolean>(collectDataThread);
-
         new Thread(inspector).start();
+
         Timer timer = new Timer();
         try{
+            // Set the output time to one minute after the current time
+            Calendar nowTime = Calendar.getInstance();
+            nowTime.add(Calendar.MINUTE, 1);
+            // Output to the console at a frequency of once a minute
             timer.scheduleAtFixedRate(new TimerTask() {
                 public void run() {
                     paymentService.outputData();
                     System.out.println("--------- Please enter the payments : --------------");
                 }
-            }, 10000, 20000);
+            }, nowTime.getTime(), 60 * 1000);
             // If the input data is incorrect, the output is terminated
             if(!inspector.get()){
                 timer.cancel();
                 System.out.println("==========THE END========");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println("ERROR: Exception message : " + e.getMessage());
         }
     }
 
@@ -52,7 +61,7 @@ public class PaymentMain {
                 rateMap.put(inputArr[0].trim(), new BigDecimal(inputArr[1].trim()));
                 nextLine = scanner.nextLine();
             }else{
-                System.out.println("The data entered is not in the correct format!");
+                System.out.println("ERROR: The data entered is not in the correct format!");
                 break;
             }
         }

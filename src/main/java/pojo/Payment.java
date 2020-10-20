@@ -20,7 +20,7 @@ public class Payment {
     }
 
     public void setAmount(BigDecimal amount) {
-        this.amount = amount != null ? amount.setScale(2, BigDecimal.ROUND_HALF_UP) : amount;
+        this.amount = amount != null ? amount.setScale(0, BigDecimal.ROUND_HALF_UP) : amount;
     }
 
     public BigDecimal getUsdAmount() {
@@ -28,7 +28,7 @@ public class Payment {
     }
 
     public void setUsdAmount(BigDecimal usdAmount) {
-        this.usdAmount = usdAmount;
+        this.usdAmount = usdAmount != null ? usdAmount.setScale(2, BigDecimal.ROUND_HALF_UP) : usdAmount;
     }
 
     @Override
